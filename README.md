@@ -12,8 +12,8 @@ In model :
 
 
     $ class Article
-    $ include Preferences::Preferable
-    $ preference :p1, :string
+    $   include Preferences::Preferable
+    $   preference :p1, :string
     $ end
 
 Use :
@@ -22,4 +22,9 @@ Use :
     $ a = Article.find(1)
     $ a.preferred_p1 = 'abc'
     
-Detial usage, please referer to [spree documentation](http://guides.spreecommerce.com/preferences.html)
+For detial usage, please referer to [spree documentation](http://guides.spreecommerce.com/preferences.html)
+
+Redis connection is default to localhost and default port; to change connection, use:
+
+
+    $ Preferences::Store.instance.redis = Redis.new(:host => "10.0.1.1", :port => 6380)
