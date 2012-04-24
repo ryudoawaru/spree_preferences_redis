@@ -7,32 +7,33 @@ require 'singleton'
 module Preferences
 
   class StoreInstance
-    attr_accessor :persistence, :redis
+    attr_accessor :persistence, :redis, :namespace
 		
     def initialize
-      # @cache = Rails.cache
-      # @persistence = true
-      # load_preferences
 			@redis = Redis.new
+			if defined?(Rails) && @namespace.blank?
+				@namespace = "#{Rails.application.class.to_s.deconstantize}-#{Rails.env}"
+			end
     end
-
+		
+		def add_ns(key)
+			"#{@namespace}_"
+		end
+		
     def set(key, value)
-      # @cache.write(key, value)
-      # persist(key, value)
-			@redis.set key, value
-			Rails.logger.info "SET PREFERENCE #{key} = #{value.to_s}"
+			@redis.set add_ns(key), value
     end
 
     def exist?(key)
-			get(key).present?
+			get(add_ns(key)).present?
     end
 
     def get(key, default_key=nil)
-			@redis.get(key)
+			@redis.get(add_ns(key))
     end
 
     def delete(key)
-			@redis.del(key)
+			@redis.del(add_ns(key))
     end
 
   end
