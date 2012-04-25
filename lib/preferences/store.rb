@@ -17,7 +17,7 @@ module Preferences
     end
 		
 		def add_ns(key)
-			"#{@namespace}_"
+			"#{@namespace}_#{key}"
 		end
 		
     def set(key, value)
