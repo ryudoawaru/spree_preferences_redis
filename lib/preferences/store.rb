@@ -7,33 +7,31 @@ require 'singleton'
 module Preferences
 
   class StoreInstance
-    attr_accessor :persistence, :redis, :namespace
+    attr_accessor :persistence, :redis
 		
     def initialize
 			@redis = Redis.new
-			if defined?(Rails) && @namespace.blank?
-				@namespace = "#{Rails.application.class.to_s.deconstantize}-#{Rails.env}"
-			end
     end
 		
-		def add_ns(key)
-			"#{@namespace}_#{key}"
-		end
-		
     def set(key, value)
-			@redis.set add_ns(key), value
+			@redis.set(key, Marshal.dump(value))
+			get(key)
     end
 
     def exist?(key)
-			get(add_ns(key)).present?
+			@redis.get(key).present?
     end
 
     def get(key, default_key=nil)
-			@redis.get(add_ns(key))
+			if vv = @redis.get(key)
+				Marshal.load(vv)
+			else
+				nil
+			end
     end
 
     def delete(key)
-			@redis.del(add_ns(key))
+			@redis.del(key)
     end
 
   end

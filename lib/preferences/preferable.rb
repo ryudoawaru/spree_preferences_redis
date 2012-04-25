@@ -65,7 +65,7 @@ module Preferences::Preferable
   end
 
   def preference_cache_key(name)
-    [self.class.name, name, (try(:id) || :new)].join('::').underscore
+    [Preferences.key_prefix, self.class.name, name, (try(:id) || :new)].join('::').underscore
   end
 
   def clear_preferences

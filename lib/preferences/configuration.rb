@@ -21,6 +21,7 @@
 #
 #
 module Preferences
+	
   class Configuration
     include Preferences::Preferable
 
@@ -29,7 +30,7 @@ module Preferences
     end
 
     def preference_cache_key(name)
-      [self.class.name, name].join('::').underscore
+      [Preferences.key_prefix, self.class.name, name].join('::').underscore
     end
 
     def reset
